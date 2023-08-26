@@ -333,7 +333,7 @@ export const AllBooksPage = () => {
           <Table size={{ base: 'sm', lg: 'md' }} variant='simple'>
             <TableCaption>Books Display</TableCaption>
             <Thead>
-              <Tr>
+              <Tr _hover={{ bg: 'none' }}>
                 <Th>No</Th>
                 <Th>Cover</Th>
                 <Th>Title</Th>
@@ -371,7 +371,7 @@ export const AllBooksPage = () => {
               ))}
             </Tbody>
             <Tfoot>
-              <Tr>
+              <Tr _hover={{ bg: 'none' }}>
                 <Th>No</Th>
                 <Th>Cover</Th>
                 <Th>Title</Th>
