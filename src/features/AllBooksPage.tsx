@@ -216,7 +216,7 @@ export const AllBooksPage = () => {
         <Heading
           letterSpacing={1.5}
           fontSize={{ base: 'xl', lg: '4xl' }}
-          py='2rem'
+          py='1rem'
         >
           Showing All Books
         </Heading>
