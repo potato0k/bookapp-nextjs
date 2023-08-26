@@ -60,23 +60,70 @@ export const languages = (books: IBook[]): string[] => {
   return filteredLanguages
 }
 
-export const pageRanges = (): string[] => {
-  let ranges: string[] = []
+export const calculateRangeFamily = (pageNum: number) => {
+  let rangeFamily: string
+  let start, end
 
-  const start = 0
-  const stop = 2000
-  const step = 100
-  const length = (stop - start) / step + 1
-//   console.log(length)
-
-  for (let i = 0; i < stop; i += step) {
-    const range = (i+1) + '...' + (i+step)
-    // console.log(range)
-    ranges.push(range)
+  if (pageNum % 100 == 0) {
+    end = pageNum
+    start = end - 99
+  } else {
+    start = pageNum - (pageNum % 100) + 1
+    end = start + 99
   }
 
-  return ranges
+  console.log('start:', start, 'end:', end)
+  rangeFamily = start.toString().concat('.', end.toString())
+
+  return rangeFamily
 }
 
+export const pageRanges = (books: IBook[]): string[] => {
+  let ranges: string[] = []
+  let sortedRanges: string[] = []
+
+  books.forEach(item => ranges.push(calculateRangeFamily(item['pages'])))
+
+  uniqueArray(ranges)
+    .sort(function (a, b) {
+      return a - b
+    })
+    .forEach(range => {
+      range = range.replace('.', '...')
+      sortedRanges.push(range)
+    })
+
+  return sortedRanges
+}
+
+export const calculateCentury = (year: number) => {
+  let century: number
+
+  //negative years and positive years have different calculations to convert
+  //to their century counterpart
+  if (year < 0) {
+    century = Math.trunc((year + 1) / 100 - 1)
+  } else {
+    century = Math.trunc((year - 1) / 100 + 1)
+  }
+
+  return century
+}
+
+export const centuries = (books: IBook[]): number[] => {
+  let centuries: number[] = []
+
+  books.forEach(item => centuries.push(calculateCentury(item['year'])))
+
+  //make list unique, sort it and return it
+  return uniqueArray(centuries).sort(function (a, b) {
+    return a - b
+  })
+}
+
+//remove duplicates from array
+function uniqueArray (a: any[]) {
+  return [...new Set(a)]
+}
 export const blockInvalidChar = (e: any) =>
   ['e', 'E', '+', '-'].includes(e.key) && e.preventDefault()
