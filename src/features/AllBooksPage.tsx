@@ -7,7 +7,12 @@ import {
 } from '@/helpers'
 import BooksData from '@/lib/data'
 import { IBook } from '@/models'
-import { ChevronDownIcon, ChevronUpIcon } from '@chakra-ui/icons'
+import {
+  ChevronDownIcon,
+  ChevronUpIcon,
+  LinkIcon,
+  ExternalLinkIcon
+} from '@chakra-ui/icons'
 import { Link } from '@chakra-ui/next-js'
 import {
   Box,
@@ -31,7 +36,6 @@ import {
 import { useEffect, useState } from 'react'
 
 export const AllBooksPage = () => {
-
   //filters
   const [searchFilter, setSearchFilter] = useState('')
   const [countryFilter, setCountryFilter] = useState('')
@@ -208,37 +212,47 @@ export const AllBooksPage = () => {
             onChange={e => setSearchFilter(e.target.value)}
           />
         </Box>
-        <Button
-          variant='outline'
-          fontSize={{ base: 'xs', lg: 'sm' }}
-          size='md'
-          fontWeight='normal'
-        >
-          Filter through books
-          {!openFilterSection ? (
+
+        {!openFilterSection ? (
+          <Button
+            variant='outline'
+            fontSize={{ base: 'xs', lg: 'sm' }}
+            size='md'
+            fontWeight='normal'
+            onClick={() => {
+              setOpenFilterSection(true)
+            }}
+          >
+            Filter through books
             <ChevronDownIcon
               boxSize='1.3rem'
               ml='0.5rem'
-              _hover={{ color: 'gray.500', cursor: 'pointer' }}
-              onClick={() => {
-                setOpenFilterSection(true)
-              }}
+              _hover={{ color: 'brand.primary', cursor: 'pointer' }}
             />
-          ) : (
+          </Button>
+        ) : (
+          <Button
+            variant='outline'
+            fontSize={{ base: 'xs', lg: 'sm' }}
+            size='md'
+            fontWeight='normal'
+            onClick={() => {
+              setOpenFilterSection(false)
+            }}
+          >
+            Filter through books
             <ChevronUpIcon
               boxSize='1.3rem'
               ml='0.5rem'
-              _hover={{ color: 'gray.500', cursor: 'pointer' }}
-              onClick={() => {
-                setOpenFilterSection(false)
-              }}
+              _hover={{ color: 'brand.primary', cursor: 'pointer' }}
             />
-          )}
-        </Button>
+          </Button>
+        )}
         {openFilterSection && (
           <>
             <Stack
               flexDir={{ base: 'column', md: 'row' }}
+              mt='-1px'
               mb='1rem'
               gap='1rem'
               p='0.7rem'
@@ -346,9 +360,7 @@ export const AllBooksPage = () => {
             </Thead>
             <Tbody>
               {visibleBooks.map((book: IBook, index) => (
-                <Tr
-                  key={index}
-                >
+                <Tr key={index}>
                   <Td>{index + 1}</Td>
                   <Td>
                     <Image
@@ -360,7 +372,18 @@ export const AllBooksPage = () => {
                     />
                   </Td>
                   <Td>
-                    <Link href={book.link}>{book.title}</Link>
+                    <Link
+                      position='relative'
+                      href={book.link}
+                      _hover={{ fontWeight: 'bold' }}
+                    >
+                      {book.title}
+                      <ExternalLinkIcon
+                        position='absolute'
+                        ml='2px'
+                        boxSize='0.6rem'
+                      />
+                    </Link>
                   </Td>
                   <Td>{book.author}</Td>
                   <Td>{book.country}</Td>
