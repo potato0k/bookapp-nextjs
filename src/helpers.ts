@@ -1,5 +1,6 @@
 import { IBook } from './models'
 
+//all available options for filtering by country
 export const countries = (books: IBook[]): string[] => {
   let countries: string[] = []
 
@@ -34,6 +35,7 @@ export const countries = (books: IBook[]): string[] => {
   return filteredCountries
 }
 
+//all available options for filtering by language
 export const languages = (books: IBook[]): string[] => {
   let languages: string[] = []
 
@@ -60,6 +62,8 @@ export const languages = (books: IBook[]): string[] => {
   return filteredLanguages
 }
 
+//this function takes the total number of pages and determine which range family it belongs to
+//for e.g.) pageNum 100 will belong to a range family of 1...100 pages 
 export const calculateRangeFamily = (pageNum: number) => {
   let rangeFamily: string
   let start, end
@@ -72,12 +76,13 @@ export const calculateRangeFamily = (pageNum: number) => {
     end = start + 99
   }
 
-  console.log('start:', start, 'end:', end)
   rangeFamily = start.toString().concat('.', end.toString())
 
   return rangeFamily
 }
 
+//all available options for filtering by number of pages
+//filtering options are provided in ranges for e.g.)1...100, 101...200
 export const pageRanges = (books: IBook[]): string[] => {
   let ranges: string[] = []
   let sortedRanges: string[] = []
@@ -96,6 +101,7 @@ export const pageRanges = (books: IBook[]): string[] => {
   return sortedRanges
 }
 
+//convert year to century
 export const calculateCentury = (year: number) => {
   let century: number
 
@@ -110,6 +116,7 @@ export const calculateCentury = (year: number) => {
   return century
 }
 
+//all available options for filtering by centuries
 export const centuries = (books: IBook[]): number[] => {
   let centuries: number[] = []
 
@@ -125,5 +132,4 @@ export const centuries = (books: IBook[]): number[] => {
 function uniqueArray (a: any[]) {
   return [...new Set(a)]
 }
-export const blockInvalidChar = (e: any) =>
-  ['e', 'E', '+', '-'].includes(e.key) && e.preventDefault()
+

@@ -10,8 +10,8 @@ import { IBook } from '@/models'
 import {
   ChevronDownIcon,
   ChevronUpIcon,
-  LinkIcon,
-  ExternalLinkIcon
+  ExternalLinkIcon,
+  CloseIcon
 } from '@chakra-ui/icons'
 import { Link } from '@chakra-ui/next-js'
 import {
@@ -21,6 +21,8 @@ import {
   Heading,
   Image,
   Input,
+  InputGroup,
+  InputRightElement,
   Select,
   Stack,
   Table,
@@ -52,6 +54,9 @@ export const AllBooksPage = () => {
     Math.ceil(filteredBooks.length / itemsPerPage)
   )
 
+  //pagination functions
+
+  //pagination numbers that are shown at the bottom
   const paginationNumbers = (total: number): number[] => {
     const paginationNumbers_: number[] = []
 
@@ -61,12 +66,30 @@ export const AllBooksPage = () => {
     return paginationNumbers_
   }
 
+  //state that stores and sets the pagination numbers
   const [paginationNumArr, setPaginationNumArr] = useState<number[]>(
     paginationNumbers(totalPages)
   )
+
+  //function that handles page changes
+  const handlePaginationChange = (
+    page: number,
+    books: IBook[] = filteredBooks
+  ) => {
+    const start = (page - 1) * itemsPerPage
+    const end = start + itemsPerPage
+    setActivePage(page)
+    setVisibleBooks(books.slice(start, end))
+  }
+
+  //state that stores and sets books that are displayed on the screen
   const [visibleBooks, setVisibleBooks] = useState<IBook[]>([])
 
   //filter functions
+  const removeSearchFilter = () => {
+    setSearchFilter('')
+  }
+
   const textSearchFilter = (books: IBook[]) => {
     const filteredItems = []
 
@@ -163,28 +186,23 @@ export const AllBooksPage = () => {
     setCenturyFilter('')
   }
 
+  //useEffects for whenever a user (1) changes the number of items per pages,
+  //(2) applis any filter
+  //(3) searches a keyword
   useEffect(() => {
     const search_filtered = textSearchFilter(BooksData)
     const country_filtered = selectedCountryFilter(search_filtered)
     const language_filtered = selectedLanguageFilter(country_filtered)
     const pageRange_filtered = selectedPageRangeFilter(language_filtered)
     const century_filtered = selectedCenturyFilter(pageRange_filtered)
-    setActivePage(1)
-
     setfilteredBooks(century_filtered)
 
-    // console.log('useeffect')
-    const start = 0
-    const end = start + itemsPerPage
+    handlePaginationChange(1, century_filtered)
 
-    // console.log('pagenum:', activePage, ' start:', start, ' end:', end)
-    setVisibleBooks(century_filtered.slice(start, end))
     setTotalPages(Math.ceil(century_filtered.length / itemsPerPage))
     setPaginationNumArr(
       paginationNumbers(Math.ceil(century_filtered.length / itemsPerPage))
     )
-
-    // console.log(JSON.stringify(filteredBooks))
   }, [searchFilter, countryFilter, languageFilter, rangeFilter, centuryFilter])
 
   return (
@@ -192,7 +210,7 @@ export const AllBooksPage = () => {
       <Box
         width={{ base: '100%', lg: '90%' }}
         mx='auto'
-        px={{ base: '1.8rem', lg: '4rem' }}
+        px={{ base: '0.8rem', lg: '4rem' }}
         py={{ base: '1.6rem', lg: '2rem' }}
       >
         <Heading
@@ -204,13 +222,17 @@ export const AllBooksPage = () => {
         </Heading>
         <Box mb='1rem'>
           <Text mb='0.5rem'>Search</Text>
-          <Input
-            placeholder='Search by keyword'
-            fontSize={{ base: 'xs', lg: 'md' }}
-            width='auto'
-            value={searchFilter}
-            onChange={e => setSearchFilter(e.target.value)}
-          />
+          <InputGroup width={{ base: 'auto', md: '16rem' }}>
+            <Input
+              placeholder='Search by keyword'
+              fontSize={{ base: 'xs', lg: 'md' }}
+              value={searchFilter}
+              onChange={e => setSearchFilter(e.target.value)}
+            />
+            <InputRightElement>
+              <CloseIcon boxSize={2.5} onClick={removeSearchFilter} />
+            </InputRightElement>
+          </InputGroup>
         </Box>
 
         {!openFilterSection ? (
@@ -344,7 +366,7 @@ export const AllBooksPage = () => {
           </>
         )}
         <Box overflowX='auto' mt='2.2rem'>
-          <Table size={{ base: 'sm', lg: 'md' }} variant='simple'>
+          <Table size='sm' variant='simple'>
             <TableCaption>Books Display</TableCaption>
             <Thead>
               <Tr _hover={{ bg: 'none' }}>
@@ -425,7 +447,9 @@ export const AllBooksPage = () => {
               value={itemsPerPage}
               width='auto'
               mx='1'
-              size='md'
+              fontSize='0.7rem'
+              size='sm'
+              rounded='md'
               onChange={e => {
                 setItemsPerPage(Number(e.target.value))
               }}
@@ -435,15 +459,15 @@ export const AllBooksPage = () => {
               <option value={100}>100</option>
             </Select>
             <Button
-              fontSize='xs'
+              fontSize='2xs'
+              h='2rem'
               mx='1'
               fontWeight='normal'
               onClick={() => {
                 setTotalPages(Math.ceil(filteredBooks.length / itemsPerPage))
-                const start = 0
-                const end = start + itemsPerPage
-                setActivePage(1)
-                setVisibleBooks(filteredBooks.slice(start, end))
+                handlePaginationChange(1)
+
+                //change the number of pages
                 setPaginationNumArr(
                   paginationNumbers(
                     Math.ceil(filteredBooks.length / itemsPerPage)
@@ -454,16 +478,17 @@ export const AllBooksPage = () => {
               Change
             </Button>
           </Flex>
-          <Flex m='1rem' gap={2} justify={{ base: 'center', lg: 'flex-end' }}>
+          <Flex
+            m='1rem'
+            gap={2}
+            justify={{ base: 'center', lg: 'flex-end' }}
+            flexWrap='wrap'
+          >
             <Button
               size='sm'
               isDisabled={activePage == 1 ? true : false}
               onClick={() => {
-                const start = (activePage - 1 - 1) * itemsPerPage
-                const end = start + itemsPerPage
-                setActivePage(activePage - 1)
-
-                setVisibleBooks(filteredBooks.slice(start, end))
+                handlePaginationChange(activePage - 1)
               }}
             >
               &lt;
@@ -471,10 +496,7 @@ export const AllBooksPage = () => {
             {paginationNumArr.map((pageNum, index) => (
               <Button
                 onClick={() => {
-                  const start = (pageNum - 1) * itemsPerPage
-                  const end = start + itemsPerPage
-                  setActivePage(pageNum)
-                  setVisibleBooks(filteredBooks.slice(start, end))
+                  handlePaginationChange(pageNum)
                 }}
                 bgColor={pageNum == activePage ? 'brand.primary' : ''}
                 key={index}
@@ -488,10 +510,7 @@ export const AllBooksPage = () => {
               size='sm'
               isDisabled={activePage == totalPages ? true : false}
               onClick={() => {
-                const start = (activePage + 1 - 1) * itemsPerPage
-                const end = start + itemsPerPage
-                setActivePage(activePage + 1)
-                setVisibleBooks(filteredBooks.slice(start, end))
+                handlePaginationChange(activePage + 1)
               }}
             >
               &gt;
