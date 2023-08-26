@@ -26,6 +26,7 @@ import {
   Select,
   Stack,
   Table,
+  TableContainer,
   TableCaption,
   Tbody,
   Td,
@@ -230,7 +231,11 @@ export const AllBooksPage = () => {
               onChange={e => setSearchFilter(e.target.value)}
             />
             <InputRightElement>
-              <CloseIcon boxSize={2.5} onClick={removeSearchFilter} />
+              <CloseIcon
+                boxSize={2.5}
+                onClick={removeSearchFilter}
+                _hover={{ cursor: 'pointer' }}
+              />
             </InputRightElement>
           </InputGroup>
         </Box>
@@ -365,8 +370,20 @@ export const AllBooksPage = () => {
             </Stack>
           </>
         )}
-        <Box overflowX='auto' mt='2.2rem'>
-          <Table size='sm' variant='simple'>
+        <Box
+          overflowX='auto'
+          mt='2.2rem'
+          sx={{
+            transform: 'rotateX(180deg)'
+          }}
+        >
+          <Table
+            size='sm'
+            variant='simple'
+            sx={{
+              transform: 'rotateX(180deg)'
+            }}
+          >
             <TableCaption>Books Display</TableCaption>
             <Thead>
               <Tr _hover={{ bg: 'none' }}>
