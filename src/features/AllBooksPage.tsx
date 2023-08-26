@@ -1,4 +1,13 @@
+import {
+  calculateCentury,
+  centuries,
+  countries,
+  languages,
+  pageRanges
+} from '@/helpers'
+import BooksData from '@/lib/data'
 import { IBook } from '@/models'
+import { ChevronDownIcon, ChevronUpIcon } from '@chakra-ui/icons'
 import { Link } from '@chakra-ui/next-js'
 import {
   Box,
@@ -6,32 +15,23 @@ import {
   Flex,
   Heading,
   Image,
+  Input,
+  Select,
+  Stack,
   Table,
   TableCaption,
   Tbody,
   Td,
+  Text,
   Tfoot,
   Th,
   Thead,
-  Tr,
-  Text,
-  Input,
-  Select,
-  Stack
+  Tr
 } from '@chakra-ui/react'
-import { usePagination } from '@mantine/hooks'
 import { useEffect, useState } from 'react'
-import BooksData from '@/lib/data'
-import {
-  centuries,
-  countries,
-  languages,
-  pageRanges,
-  calculateCentury
-} from '@/helpers'
-import { ChevronDownIcon, ChevronUpIcon } from '@chakra-ui/icons'
 
 export const AllBooksPage = () => {
+
   //filters
   const [searchFilter, setSearchFilter] = useState('')
   const [countryFilter, setCountryFilter] = useState('')
@@ -198,7 +198,6 @@ export const AllBooksPage = () => {
         >
           Showing All Books
         </Heading>
-
         <Box mb='1rem'>
           <Text mb='0.5rem'>Search</Text>
           <Input
@@ -209,7 +208,6 @@ export const AllBooksPage = () => {
             onChange={e => setSearchFilter(e.target.value)}
           />
         </Box>
-
         <Button
           variant='outline'
           fontSize={{ base: 'xs', lg: 'sm' }}
@@ -237,102 +235,100 @@ export const AllBooksPage = () => {
             />
           )}
         </Button>
-
         {openFilterSection && (
           <>
-              <Stack
-                flexDir={{ base: 'column', md: 'row' }}
-                mb='1rem'
-                gap='1rem'
-                p='0.7rem'
-                borderWidth='1px'
-                borderRadius='md'
-              >
-                <Flex flexDir={{ base: 'column', md: 'row' }} gap='1rem'>
-                  <Box>
-                    <Text mb='0.4rem' fontSize={{ base: 'xs', lg: 'sm' }}>
-                      Country
-                    </Text>
-                    <Select
-                      placeholder='None'
-                      fontSize={{ base: 'xs', lg: 'sm' }}
-                      width='auto'
-                      value={countryFilter}
-                      onChange={e => setCountryFilter(e.target.value)}
-                    >
-                      {countries(filteredBooks).map((option, index) => (
-                        <option key={index} value={option}>
-                          {option}
-                        </option>
-                      ))}
-                    </Select>
-                  </Box>
-                  <Box>
-                    <Text mb='0.4rem' fontSize={{ base: 'xs', lg: 'sm' }}>
-                      Language
-                    </Text>
-                    <Select
-                      placeholder='None'
-                      fontSize={{ base: 'xs', lg: 'sm' }}
-                      value={languageFilter}
-                      onChange={e => setLanguageFilter(e.target.value)}
-                    >
-                      {languages(filteredBooks).map((option, index) => (
-                        <option key={index} value={option}>
-                          {option}
-                        </option>
-                      ))}
-                    </Select>
-                  </Box>
-                  <Box>
-                    <Text mb='0.4rem' fontSize={{ base: 'xs', lg: 'sm' }}>
-                      No. of pages
-                    </Text>
-                    <Select
-                      placeholder='None'
-                      fontSize={{ base: 'xs', lg: 'sm' }}
-                      value={rangeFilter}
-                      onChange={e => setRangeFilter(e.target.value)}
-                    >
-                      {pageRanges(filteredBooks).map((option, index) => (
-                        <option key={index} value={option}>
-                          {option}
-                        </option>
-                      ))}
-                    </Select>
-                  </Box>
-                  <Box>
-                    <Text mb='0.4rem' fontSize={{ base: 'xs', lg: 'sm' }}>
-                      Century
-                    </Text>
-                    <Select
-                      placeholder='None'
-                      fontSize={{ base: 'xs', lg: 'sm' }}
-                      value={centuryFilter}
-                      onChange={e => setCenturyFilter(e.target.value)}
-                    >
-                      {centuries(filteredBooks).map((option, index) => (
-                        <option key={index} value={option}>
-                          {option}
-                        </option>
-                      ))}
-                    </Select>
-                  </Box>
-                </Flex>
-
-                <Flex alignItems='end'>
-                  <Button
-                    fontWeight='medium'
-                    onClick={handleRemoveFilters}
+            <Stack
+              flexDir={{ base: 'column', md: 'row' }}
+              mb='1rem'
+              gap='1rem'
+              p='0.7rem'
+              borderWidth='1px'
+              borderRadius='md'
+            >
+              <Flex flexDir={{ base: 'column', md: 'row' }} gap='1rem'>
+                <Box>
+                  <Text mb='0.4rem' fontSize={{ base: 'xs', lg: 'sm' }}>
+                    Country
+                  </Text>
+                  <Select
+                    placeholder='None'
                     fontSize={{ base: 'xs', lg: 'sm' }}
+                    width='auto'
+                    value={countryFilter}
+                    onChange={e => setCountryFilter(e.target.value)}
                   >
-                    Remove Filters
-                  </Button>
-                </Flex>
-              </Stack>
+                    {countries(filteredBooks).map((option, index) => (
+                      <option key={index} value={option}>
+                        {option}
+                      </option>
+                    ))}
+                  </Select>
+                </Box>
+                <Box>
+                  <Text mb='0.4rem' fontSize={{ base: 'xs', lg: 'sm' }}>
+                    Language
+                  </Text>
+                  <Select
+                    placeholder='None'
+                    fontSize={{ base: 'xs', lg: 'sm' }}
+                    value={languageFilter}
+                    onChange={e => setLanguageFilter(e.target.value)}
+                  >
+                    {languages(filteredBooks).map((option, index) => (
+                      <option key={index} value={option}>
+                        {option}
+                      </option>
+                    ))}
+                  </Select>
+                </Box>
+                <Box>
+                  <Text mb='0.4rem' fontSize={{ base: 'xs', lg: 'sm' }}>
+                    No. of pages
+                  </Text>
+                  <Select
+                    placeholder='None'
+                    fontSize={{ base: 'xs', lg: 'sm' }}
+                    value={rangeFilter}
+                    onChange={e => setRangeFilter(e.target.value)}
+                  >
+                    {pageRanges(filteredBooks).map((option, index) => (
+                      <option key={index} value={option}>
+                        {option}
+                      </option>
+                    ))}
+                  </Select>
+                </Box>
+                <Box>
+                  <Text mb='0.4rem' fontSize={{ base: 'xs', lg: 'sm' }}>
+                    Century
+                  </Text>
+                  <Select
+                    placeholder='None'
+                    fontSize={{ base: 'xs', lg: 'sm' }}
+                    value={centuryFilter}
+                    onChange={e => setCenturyFilter(e.target.value)}
+                  >
+                    {centuries(filteredBooks).map((option, index) => (
+                      <option key={index} value={option}>
+                        {option}
+                      </option>
+                    ))}
+                  </Select>
+                </Box>
+              </Flex>
+
+              <Flex alignItems='end'>
+                <Button
+                  fontWeight='medium'
+                  onClick={handleRemoveFilters}
+                  fontSize={{ base: 'xs', lg: 'sm' }}
+                >
+                  Remove Filters
+                </Button>
+              </Flex>
+            </Stack>
           </>
         )}
-
         <Box overflowX='auto' mt='2.2rem'>
           <Table size={{ base: 'sm', lg: 'md' }} variant='simple'>
             <TableCaption>Books Display</TableCaption>
@@ -350,7 +346,9 @@ export const AllBooksPage = () => {
             </Thead>
             <Tbody>
               {visibleBooks.map((book: IBook, index) => (
-                <Tr _hover={{ bg: 'gray.700' }} key={index}>
+                <Tr
+                  key={index}
+                >
                   <Td>{index + 1}</Td>
                   <Td>
                     <Image
@@ -386,7 +384,6 @@ export const AllBooksPage = () => {
             </Tfoot>
           </Table>
         </Box>
-
         <Flex
           mx='auto'
           justify='space-between'
@@ -444,7 +441,6 @@ export const AllBooksPage = () => {
                 setActivePage(activePage - 1)
 
                 setVisibleBooks(filteredBooks.slice(start, end))
-                // console.log(JSON.stringify(visibleBooks))
               }}
             >
               &lt;
@@ -455,11 +451,9 @@ export const AllBooksPage = () => {
                   const start = (pageNum - 1) * itemsPerPage
                   const end = start + itemsPerPage
                   setActivePage(pageNum)
-
                   setVisibleBooks(filteredBooks.slice(start, end))
-                  // console.log(JSON.stringify(visibleBooks))
                 }}
-                bgColor={pageNum == activePage ? 'blue.400' : 'gray.600'}
+                bgColor={pageNum == activePage ? 'brand.primary' : ''}
                 key={index}
                 size='sm'
               >
@@ -474,9 +468,7 @@ export const AllBooksPage = () => {
                 const start = (activePage + 1 - 1) * itemsPerPage
                 const end = start + itemsPerPage
                 setActivePage(activePage + 1)
-
                 setVisibleBooks(filteredBooks.slice(start, end))
-                // console.log(JSON.stringify(visibleBooks))
               }}
             >
               &gt;

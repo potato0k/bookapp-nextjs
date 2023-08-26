@@ -1,35 +1,41 @@
 import { extendTheme } from '@chakra-ui/react'
-import { mode, Styles } from '@chakra-ui/theme-tools'
+import type { StyleFunctionProps } from '@chakra-ui/styled-system'
+import { mode } from '@chakra-ui/theme-tools'
 
 import '@fontsource/poppins'
 
-export const colors = {
-  brand: {
-    primary: 'hsla(32, 100%, 19%, 1)',
-    primaryLight: 'hsla(32, 100%, 29%, 1)',
-    primaryDark: 'hsla(32, 100%, 9%, 1)'
-  }
-}
+export const theme = extendTheme({
+  initialColorMode: 'system',
+  useSystemColorMode: false,
 
-export const styles: Styles = {
-  global: props => ({
-    body: {
-      fontFamily: 'body',
-      color: 'gray.800',
-      bg: 'white',
-      transitionProperty: 'background-color',
-      transitionDuration: 'normal',
-      lineHeight: 'base'
+  colors: {
+    brand: {
+      primary: '#8c8c8c',
+      primaryLight: '#f2f2f2',
+      primaryDark: '#1a1a1a'
     },
-    '*::placeholder': {
-      color: 'gray.400'
+    secondary: '#009400',
+    text: {
+      dark: '#000',
+      light: '#fff'
     },
-    '*, *::before, &::after': {
-      borderColor: 'gray.200', 
-      wordWrap: 'break-word'
-    }
-  })
-}
+    icon: '#ffd700'
+  },
+  fonts: {
+    heading: "'Poppins', sans-serif",
+    body: "'Poppins', sans-serif"
+  },
+  styles: {
+    global: (props: StyleFunctionProps) => ({
+      body: {
+        bg: mode('', '')(props)
+      },
+      tr: {
+        _hover: { bg: mode('#f2f2f2', '#1a1a1a')(props) }
+      }
+    })
+  }
+})
 
 // export const styles: Styles = {
 //   global: props => ({
@@ -50,10 +56,3 @@ export const styles: Styles = {
 //     }
 //   })
 // }
-
-export const fonts = {
-  heading: "'Poppins', sans-serif",
-  body: "'Poppins', sans-serif"
-}
-
-export const theme = extendTheme({ colors, fonts, styles })
