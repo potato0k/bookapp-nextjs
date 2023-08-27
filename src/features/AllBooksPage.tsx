@@ -11,7 +11,8 @@ import {
   ChevronDownIcon,
   ChevronUpIcon,
   ExternalLinkIcon,
-  CloseIcon
+  CloseIcon,
+  SearchIcon
 } from '@chakra-ui/icons'
 import { Link } from '@chakra-ui/next-js'
 import {
@@ -204,7 +205,14 @@ export const AllBooksPage = () => {
     setPaginationNumArr(
       paginationNumbers(Math.ceil(century_filtered.length / itemsPerPage))
     )
-  }, [searchFilter, countryFilter, languageFilter, rangeFilter, centuryFilter, itemsPerPage])
+  }, [
+    searchFilter,
+    countryFilter,
+    languageFilter,
+    rangeFilter,
+    centuryFilter,
+    itemsPerPage
+  ])
 
   return (
     <>
@@ -212,17 +220,18 @@ export const AllBooksPage = () => {
         width={{ base: '100%', lg: '90%' }}
         mx='auto'
         px={{ base: '0.8rem', lg: '4rem' }}
-        py={{ base: '1.6rem', lg: '2rem' }}
+        py={{ base: '1rem', lg: '1.2rem' }}
       >
         <Heading
+          position='relative'
           letterSpacing={1.5}
           fontSize={{ base: 'xl', lg: '4xl' }}
-          py='1rem'
+          py={{ base: '1rem', lg: '1.2rem' }}
         >
           Showing All Books
         </Heading>
+
         <Box mb='1rem'>
-          <Text mb='0.5rem'>Search</Text>
           <InputGroup width={{ base: 'auto', md: '16rem' }}>
             <Input
               placeholder='Search by keyword'
@@ -231,11 +240,15 @@ export const AllBooksPage = () => {
               onChange={e => setSearchFilter(e.target.value)}
             />
             <InputRightElement>
-              <CloseIcon
-                boxSize={2.5}
-                onClick={removeSearchFilter}
-                _hover={{ cursor: 'pointer' }}
-              />
+              {searchFilter == '' ? (
+                <SearchIcon boxSize={3.5} />
+              ) : (
+                <CloseIcon
+                  boxSize={2.5}
+                  onClick={removeSearchFilter}
+                  _hover={{ cursor: 'pointer' }}
+                />
+              )}
             </InputRightElement>
           </InputGroup>
         </Box>
@@ -374,10 +387,11 @@ export const AllBooksPage = () => {
 
         <Flex
           justify='center'
-          py='0.5rem'
+          pt='0.5rem'
           alignItems='center'
           fontSize='xs'
           gap={1}
+          color='gray.600'
         >
           <Text>Showing</Text>
           <Text fontWeight='bold'>{(activePage - 1) * itemsPerPage + 1}</Text>
@@ -390,7 +404,7 @@ export const AllBooksPage = () => {
 
         <Box
           overflowX='auto'
-          mt='2.2rem'
+          mt='0.5rem'
           sx={{
             transform: 'rotateX(180deg)'
           }}
@@ -501,6 +515,7 @@ export const AllBooksPage = () => {
             alignItems='center'
             fontSize='xs'
             gap={1}
+            color='gray.600'
           >
             <Text>Showing</Text>
             <Text fontWeight='bold'>{(activePage - 1) * itemsPerPage + 1}</Text>
