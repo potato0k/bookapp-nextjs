@@ -204,7 +204,7 @@ export const AllBooksPage = () => {
     setPaginationNumArr(
       paginationNumbers(Math.ceil(century_filtered.length / itemsPerPage))
     )
-  }, [searchFilter, countryFilter, languageFilter, rangeFilter, centuryFilter])
+  }, [searchFilter, countryFilter, languageFilter, rangeFilter, centuryFilter, itemsPerPage])
 
   return (
     <>
@@ -226,7 +226,7 @@ export const AllBooksPage = () => {
           <InputGroup width={{ base: 'auto', md: '16rem' }}>
             <Input
               placeholder='Search by keyword'
-              fontSize={{ base: 'xs', lg: 'md' }}
+              fontSize={{ base: 'sm', lg: 'md' }}
               value={searchFilter}
               onChange={e => setSearchFilter(e.target.value)}
             />
@@ -243,7 +243,7 @@ export const AllBooksPage = () => {
         {!openFilterSection ? (
           <Button
             variant='outline'
-            fontSize={{ base: 'xs', lg: 'sm' }}
+            fontSize={{ base: 'sm', lg: 'md' }}
             size='md'
             fontWeight='normal'
             onClick={() => {
@@ -260,7 +260,7 @@ export const AllBooksPage = () => {
         ) : (
           <Button
             variant='outline'
-            fontSize={{ base: 'xs', lg: 'sm' }}
+            fontSize={{ base: 'sm', lg: 'md' }}
             size='md'
             fontWeight='normal'
             onClick={() => {
@@ -275,6 +275,7 @@ export const AllBooksPage = () => {
             />
           </Button>
         )}
+
         {openFilterSection && (
           <>
             <Stack
@@ -370,6 +371,23 @@ export const AllBooksPage = () => {
             </Stack>
           </>
         )}
+
+        <Flex
+          justify='center'
+          py='0.5rem'
+          alignItems='center'
+          fontSize='xs'
+          gap={1}
+        >
+          <Text>Showing</Text>
+          <Text fontWeight='bold'>{(activePage - 1) * itemsPerPage + 1}</Text>
+          <Text> to </Text>
+          <Text fontWeight='bold'>
+            {(activePage - 1) * itemsPerPage + itemsPerPage}
+          </Text>
+          of <Text fontWeight='bold'>{filteredBooks.length}</Text> items
+        </Flex>
+
         <Box
           overflowX='auto'
           mt='2.2rem'
@@ -400,7 +418,7 @@ export const AllBooksPage = () => {
             <Tbody>
               {visibleBooks.map((book: IBook, index) => (
                 <Tr key={index}>
-                  <Td>{index + 1}</Td>
+                  <Td>{index + ((activePage - 1) * itemsPerPage + 1)}</Td>
                   <Td>
                     <Image
                       alt={book.title}
@@ -475,26 +493,26 @@ export const AllBooksPage = () => {
               <option value={50}>50</option>
               <option value={100}>100</option>
             </Select>
-            <Button
-              fontSize='2xs'
-              h='2rem'
-              mx='1'
-              fontWeight='normal'
-              onClick={() => {
-                setTotalPages(Math.ceil(filteredBooks.length / itemsPerPage))
-                handlePaginationChange(1)
-
-                //change the number of pages
-                setPaginationNumArr(
-                  paginationNumbers(
-                    Math.ceil(filteredBooks.length / itemsPerPage)
-                  )
-                )
-              }}
-            >
-              Change
-            </Button>
           </Flex>
+
+          <Flex
+            justify='center'
+            py='0.5rem'
+            alignItems='center'
+            fontSize='xs'
+            gap={1}
+          >
+            <Text>Showing</Text>
+            <Text fontWeight='bold'>{(activePage - 1) * itemsPerPage + 1}</Text>
+            <Text> to </Text>
+            <Text fontWeight='bold'>
+              {activePage == totalPages
+                ? filteredBooks.length
+                : (activePage - 1) * itemsPerPage + itemsPerPage}
+            </Text>
+            of <Text fontWeight='bold'>{filteredBooks.length}</Text> items
+          </Flex>
+
           <Flex
             m='1rem'
             gap={2}

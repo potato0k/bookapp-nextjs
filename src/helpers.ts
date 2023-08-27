@@ -62,7 +62,7 @@ export const languages = (books: IBook[]): string[] => {
   return filteredLanguages
 }
 
-//this function takes the total number of pages and determine which range family it belongs to
+//this function takes the page number and determines which range family it belongs to
 //for e.g.) pageNum 100 will belong to a range family of 1...100 pages 
 export const calculateRangeFamily = (pageNum: number) => {
   let rangeFamily: string
